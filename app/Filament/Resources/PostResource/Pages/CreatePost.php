@@ -35,8 +35,15 @@ class CreatePost extends CreateRecord
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    $this->record->status = $data['status'];
-                    $this->save();
+                    $formData = array_merge($this->getForm('form')->getState(), $data);
+                    $record = $this->handleRecordCreation($formData);
+
+                    \Filament\Notifications\Notification::make()
+                        ->success()
+                        ->title('Post created successfully.')
+                        ->send();
+
+                    $this->redirect($this->getResource()::getUrl('edit', ['record' => $record]));
                 }),
         ];
     }
