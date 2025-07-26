@@ -1,11 +1,15 @@
 {
+  "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-BQpGBb1f.woff2",
+    "src": "node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-CbzCGUCo.css",
+    "file": "assets/app-DBGGJKpX.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DNxiirP_.js",
+    "file": "assets/app-D19KGRKi.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
