@@ -43,7 +43,16 @@ class PostResource extends JsonResource
                     "id" => $this->user->id,
                     "name" => $this->user->name,
                     "bio" => $this->user->bio,
-                    "profile_photo" => $this->user->profile_photo,
+                    "profile_photo" => $this->user->profile_photo
+                        ? (preg_match(
+                            "/^https?:\/\//",
+                            $this->user->profile_photo,
+                        )
+                            ? $this->user->profile_photo
+                            : "uploads/" .
+                                ltrim($this->user->profile_photo, "/"))
+                        : null,
+                    "email" => $this->user->email,
                 ]
                 : null,
         ];
