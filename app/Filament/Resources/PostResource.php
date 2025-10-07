@@ -122,7 +122,7 @@ class PostResource extends Resource
 
                 Tables\Columns\TextColumn::make("created_at")
                     ->label("Published On")
-                    ->dateTime("d M Y") // Format the date for readability
+                    ->dateTime("d M Y H:i") // Format the date and time for readability
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make("slug")
