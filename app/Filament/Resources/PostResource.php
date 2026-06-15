@@ -2,24 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
-use App\Models\Post;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Illuminate\Support\Str;
-use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Auth;
+use App\Filament\Resources\PostResource\Pages\CreatePost;
 use App\Filament\Resources\PostResource\Pages\EditPost;
 use App\Filament\Resources\PostResource\Pages\ListPosts;
-use App\Filament\Resources\PostResource\Pages\CreatePost;
-use Filament\Forms\Components\Group; // Correct import
+use App\Models\Post;
+use Filament\Forms;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str; // Correct import
 
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static ?string $navigationIcon = "heroicon-o-newspaper";
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
 
     // Removed: use Filament\Forms\Components\Group;
 
@@ -30,54 +30,53 @@ class PostResource extends Resource
                 // Main content column
                 Group::make()
                     ->schema([
-                        Forms\Components\Section::make("Content")->schema([
-                            Forms\Components\TextInput::make("title")
+                        Forms\Components\Section::make('Content')->schema([
+                            Forms\Components\TextInput::make('title')
                                 // ... same as before
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(
-                                    fn($state, callable $set) => $set(
-                                        "slug",
+                                    fn ($state, callable $set) => $set(
+                                        'slug',
                                         Str::slug($state),
                                     ),
                                 ),
-                            Forms\Components\TextInput::make("slug")
+                            Forms\Components\TextInput::make('slug')
                                 // ... same as before
                                 ->disabled()
                                 ->dehydrated(),
                             Forms\Components\RichEditor::make(
-                                "content",
+                                'content',
                             )->columnSpanFull(),
                         ]),
                     ])
-                    ->columnSpan(["lg" => 2]),
+                    ->columnSpan(['lg' => 2]),
 
                 // Sidebar column
                 Group::make()
                     ->schema([
-                        Forms\Components\Section::make("Metadata")->schema([
-                            Forms\Components\FileUpload::make("featured_image")
+                        Forms\Components\Section::make('Metadata')->schema([
+                            Forms\Components\FileUpload::make('featured_image')
                                 ->image()
                                 ->imageEditor()
-                                ->optimize('webp')
                                 ->maxSize(5120) // Limit to 5MB
-                                ->directory("featured-images")
-                                ->disk("public"),
-                            Forms\Components\Select::make("category_id")
-                                ->relationship("category", "name")
+                                ->directory('featured-images')
+                                ->disk('public'),
+                            Forms\Components\Select::make('category_id')
+                                ->relationship('category', 'name')
                                 ->required()
                                 ->searchable()
                                 ->preload(),
-                            Forms\Components\Select::make("tags")
+                            Forms\Components\Select::make('tags')
                                 ->multiple()
-                                ->relationship("tags", "name")
+                                ->relationship('tags', 'name')
                                 ->searchable()
                                 ->preload(),
                         ]),
                     ])
-                    ->columnSpan(["lg" => 1]),
+                    ->columnSpan(['lg' => 1]),
 
-                Forms\Components\Hidden::make("user_id")
-                    ->default(fn() => Auth::id())
+                Forms\Components\Hidden::make('user_id')
+                    ->default(fn () => Auth::id())
                     ->dehydrated(),
             ])
             ->columns(3);
@@ -87,66 +86,66 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make("featured_image")
-                    ->label("Image")
-                    ->disk("public")
+                Tables\Columns\ImageColumn::make('featured_image')
+                    ->label('Image')
+                    ->disk('public')
                     ->circular() // ✨ Use circular images for a cleaner look
                     ->toggleable(isToggledHiddenByDefault: true), // Hide by default to save space
 
-                Tables\Columns\TextColumn::make("title")
+                Tables\Columns\TextColumn::make('title')
                     ->searchable()
                     ->sortable()
                     ->limit(50) // Limit title length to prevent wrapping
-                    ->tooltip(fn($record) => $record->title), // Show full title on hover
+                    ->tooltip(fn ($record) => $record->title), // Show full title on hover
 
-                Tables\Columns\TextColumn::make("status")
+                Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->colors([
-                        "success" => "publish",
-                        "warning" => "draft",
+                        'success' => 'publish',
+                        'warning' => 'draft',
                     ])
-                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("category.name")
-                    ->label("Category")
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
                     ->searchable()
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("user.name")
-                    ->label("Author")
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Author')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true), // Often useful but can be hidden
 
-                Tables\Columns\TextColumn::make("tags.name")
-                    ->label("Tags")
+                Tables\Columns\TextColumn::make('tags.name')
+                    ->label('Tags')
                     ->badge()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make("created_at")
-                    ->label("Published On")
-                    ->dateTime("d M Y H:i") // Format the date and time for readability
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Published On')
+                    ->dateTime('d M Y H:i') // Format the date and time for readability
                     ->sortable(),
 
-                Tables\Columns\TextColumn::make("slug")
+                Tables\Columns\TextColumn::make('slug')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true), // 💡 Hide slug by default
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make("category")
-                    ->relationship("category", "name")
+                Tables\Filters\SelectFilter::make('category')
+                    ->relationship('category', 'name')
                     ->searchable()
                     ->preload(),
-                Tables\Filters\SelectFilter::make("tags")
+                Tables\Filters\SelectFilter::make('tags')
                     ->multiple()
-                    ->relationship("tags", "name")
+                    ->relationship('tags', 'name')
                     ->searchable()
                     ->preload(),
-                Tables\Filters\SelectFilter::make("status") // 💡 Added status filter
+                Tables\Filters\SelectFilter::make('status') // 💡 Added status filter
                     ->options([
-                        "draft" => "Draft",
-                        "publish" => "Published",
+                        'draft' => 'Draft',
+                        'publish' => 'Published',
                     ]),
             ])
             ->actions([
@@ -154,28 +153,28 @@ class PostResource extends Resource
                     // ✨ Group actions for a cleaner UI
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
-                    Tables\Actions\Action::make("publish")
-                        ->label("Publish")
-                        ->icon("heroicon-o-check-circle")
-                        ->color("success")
+                    Tables\Actions\Action::make('publish')
+                        ->label('Publish')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
                         ->requiresConfirmation()
                         ->action(
-                            fn($record) => $record->update([
-                                "status" => "publish",
+                            fn ($record) => $record->update([
+                                'status' => 'publish',
                             ]),
                         )
-                        ->visible(fn($record) => $record->status === "draft"),
-                    Tables\Actions\Action::make("unpublish")
-                        ->label("Unpublish")
-                        ->icon("heroicon-o-x-circle")
-                        ->color("warning")
+                        ->visible(fn ($record) => $record->status === 'draft'),
+                    Tables\Actions\Action::make('unpublish')
+                        ->label('Unpublish')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('warning')
                         ->requiresConfirmation()
                         ->action(
-                            fn($record) => $record->update([
-                                "status" => "draft",
+                            fn ($record) => $record->update([
+                                'status' => 'draft',
                             ]),
                         )
-                        ->visible(fn($record) => $record->status === "publish"),
+                        ->visible(fn ($record) => $record->status === 'publish'),
                     Tables\Actions\DeleteAction::make(),
                 ]),
             ])
@@ -183,33 +182,33 @@ class PostResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     // ✨ Added bulk action for publishing
-                    Tables\Actions\BulkAction::make("publish")
-                        ->label("Publish selected")
-                        ->icon("heroicon-o-check-circle")
+                    Tables\Actions\BulkAction::make('publish')
+                        ->label('Publish selected')
+                        ->icon('heroicon-o-check-circle')
                         ->action(
-                            fn($records) => $records->each->update([
-                                "status" => "publish",
+                            fn ($records) => $records->each->update([
+                                'status' => 'publish',
                             ]),
                         )
                         ->requiresConfirmation(),
                 ]),
             ])
-            ->defaultSort("created_at", "desc"); // Sort by newest posts by default
+            ->defaultSort('created_at', 'desc'); // Sort by newest posts by default
     }
 
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            //
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListPosts::route("/"),
-            "create" => CreatePost::route("/create"),
-            "edit" => EditPost::route("/{record}/edit"),
+            'index' => ListPosts::route('/'),
+            'create' => CreatePost::route('/create'),
+            'edit' => EditPost::route('/{record}/edit'),
         ];
     }
 }

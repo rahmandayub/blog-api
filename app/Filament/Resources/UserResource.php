@@ -12,30 +12,30 @@ use Filament\Tables\Table;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationIcon = "heroicon-o-user";
+
+    protected static ?string $navigationIcon = 'heroicon-o-user';
 
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form->schema([
-            Forms\Components\FileUpload::make("profile_photo")
-                ->label("Photo")
-                ->disk("public")
+            Forms\Components\FileUpload::make('profile_photo')
+                ->label('Photo')
+                ->disk('public')
                 ->avatar()
                 ->image()
                 ->imageEditor()
-                ->optimize('webp')
                 ->maxSize(2048)
                 ->hiddenLabel()
                 ->columnSpanFull()
                 ->disabled(),
-            Forms\Components\TextInput::make("name")
+            Forms\Components\TextInput::make('name')
                 ->maxLength(255)
                 ->disabled(),
-            Forms\Components\TextInput::make("email")
+            Forms\Components\TextInput::make('email')
                 ->email()
                 ->maxLength(255)
                 ->disabled(),
-            Forms\Components\Textarea::make("bio")
+            Forms\Components\Textarea::make('bio')
                 ->maxLength(65535)
                 ->columnSpanFull()
                 ->disabled(),
@@ -46,29 +46,29 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make("profile_photo")
-                    ->label("Photo")
-                    ->disk("public")
+                Tables\Columns\ImageColumn::make('profile_photo')
+                    ->label('Photo')
+                    ->disk('public')
                     ->circular()
                     ->height(48)
                     ->width(48)
                     ->toggleable(isToggledHiddenByDefault: false),
-                Tables\Columns\TextColumn::make("name")
+                Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
                     ->limit(30)
-                    ->tooltip(fn($record) => $record->name),
-                Tables\Columns\TextColumn::make("email")
+                    ->tooltip(fn ($record) => $record->name),
+                Tables\Columns\TextColumn::make('email')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make("bio")
+                Tables\Columns\TextColumn::make('bio')
                     ->limit(50)
                     ->toggleable(isToggledHiddenByDefault: false)
-                    ->tooltip(fn($record) => $record->bio),
+                    ->tooltip(fn ($record) => $record->bio),
             ])
             ->actions([Tables\Actions\ViewAction::make()])
-            ->defaultSort("name", "asc");
+            ->defaultSort('name', 'asc');
     }
 
     public static function getRelations(): array
@@ -79,8 +79,8 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            "index" => Pages\ListUsers::route(""),
-            "view" => Pages\ViewUser::route("/{record}"),
+            'index' => Pages\ListUsers::route(''),
+            'view' => Pages\ViewUser::route('/{record}'),
         ];
     }
 }
