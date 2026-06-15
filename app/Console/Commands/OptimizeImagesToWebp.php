@@ -102,10 +102,16 @@ class OptimizeImagesToWebp extends Command
 
         try {
             $fileContents = Storage::disk($disk)->get($path);
-            $image = $manager->read($fileContents);
             
-            // Encode to webp format with 80% quality
-            $encoded = $image->toWebp(80);
+            // Handle differences between Intervention Image v3 and v4
+            if (method_exists($manager, 'read')) {
+                $image = $manager->read($fileContents);
+                $encoded = $image->toWebp(80);
+            } else {
+                // Intervention Image v4+
+                $image = $manager->decode($fileContents);
+                $encoded = $image->encodeUsingFileExtension('webp', 80);
+            }
 
             $directory = dirname($path);
             $filenameWithoutExt = pathinfo($path, PATHINFO_FILENAME);
