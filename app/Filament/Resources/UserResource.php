@@ -22,6 +22,9 @@ class UserResource extends Resource
                 ->disk("public")
                 ->avatar()
                 ->image()
+                ->imageEditor()
+                ->optimize('webp')
+                ->maxSize(2048)
                 ->hiddenLabel()
                 ->columnSpanFull()
                 ->disabled(),
