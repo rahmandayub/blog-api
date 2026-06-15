@@ -57,6 +57,10 @@ class PostResource extends Resource
                         Forms\Components\Section::make("Metadata")->schema([
                             Forms\Components\FileUpload::make("featured_image")
                                 ->image()
+                                ->imageEditor()
+                                ->optimize('webp')
+                                ->maxSize(5120) // Limit to 5MB
+                                ->directory("featured-images")
                                 ->disk("public"),
                             Forms\Components\Select::make("category_id")
                                 ->relationship("category", "name")

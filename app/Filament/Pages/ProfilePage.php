@@ -60,8 +60,9 @@ class ProfilePage extends Page
                                 FileUpload::make("profile_photo")
                                     ->label("Upload Photo")
                                     ->image()
+                                    ->imageEditor()
+                                    ->optimize('webp')
                                     ->imageCropAspectRatio("1:1")
-
                                     ->hint(
                                         "For best results, upload a square photo.",
                                     )
