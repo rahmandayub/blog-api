@@ -58,9 +58,13 @@ class PostResource extends Resource
                             Forms\Components\FileUpload::make('featured_image')
                                 ->image()
                                 ->imageEditor()
+                                ->live()
                                 ->maxSize(5120) // Limit to 5MB
                                 ->directory('featured-images')
-                                ->disk('public'),
+                                ->disk('public')
+                                ->getUploadedFileNameForStorageUsing(
+                                    fn (\Illuminate\Http\UploadedFile $file): string => Str::random(40) . '.' . $file->getClientOriginalExtension(),
+                                ),
                             Forms\Components\Select::make('category_id')
                                 ->relationship('category', 'name')
                                 ->required()
