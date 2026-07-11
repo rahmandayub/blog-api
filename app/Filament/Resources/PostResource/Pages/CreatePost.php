@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
-use Filament\Actions;
-use Filament\Resources\Pages\CreateRecord;
-use Filament\Forms\Components\Select;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
 
 class CreatePost extends CreateRecord
 {
@@ -15,6 +15,7 @@ class CreatePost extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['status'] = $data['status'] ?? 'draft';
+
         return $data;
     }
 
@@ -38,7 +39,7 @@ class CreatePost extends CreateRecord
                     $formData = array_merge($this->getForm('form')->getState(), $data);
                     $record = $this->handleRecordCreation($formData);
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->success()
                         ->title('Post created successfully.')
                         ->send();

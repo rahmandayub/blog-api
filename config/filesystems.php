@@ -41,7 +41,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => public_path('uploads'), // Change root to public/uploads
-            'url' => env('APP_URL') . '/uploads', // Update URL to reflect new path
+            'url' => env('APP_URL').'/uploads', // Update URL to reflect new path
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

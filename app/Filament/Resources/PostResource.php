@@ -12,8 +12,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str; // Correct import
+use Illuminate\Support\Str;
+
+ // Correct import
 
 class PostResource extends Resource
 {
@@ -63,7 +66,7 @@ class PostResource extends Resource
                                 ->directory('featured-images')
                                 ->disk('public')
                                 ->getUploadedFileNameForStorageUsing(
-                                    fn (\Illuminate\Http\UploadedFile $file): string => Str::random(40) . '.' . $file->getClientOriginalExtension(),
+                                    fn (UploadedFile $file): string => Str::random(40).'.'.$file->getClientOriginalExtension(),
                                 ),
                             Forms\Components\Select::make('category_id')
                                 ->relationship('category', 'name')

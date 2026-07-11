@@ -2,13 +2,13 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class OptimizeImagesToWebp extends Command
 {
@@ -32,7 +32,7 @@ class OptimizeImagesToWebp extends Command
     public function handle()
     {
         $disk = $this->option('disk');
-        $manager = new ImageManager(new Driver());
+        $manager = new ImageManager(new Driver);
 
         $this->info("Starting image optimization to WebP on disk: {$disk}");
 
@@ -46,10 +46,10 @@ class OptimizeImagesToWebp extends Command
             foreach ($posts as $post) {
                 $path = $post->featured_image;
                 $newPath = $this->convertToWebp($manager, $disk, $path);
-                
+
                 if ($newPath && $newPath !== $path) {
                     $post->featured_image = $newPath;
-                    $post->save(); 
+                    $post->save();
                     // Note: Post model's booted() event will automatically delete the old image!
                 }
                 $bar->advance();
@@ -68,7 +68,7 @@ class OptimizeImagesToWebp extends Command
             foreach ($users as $user) {
                 $path = $user->profile_photo;
                 $newPath = $this->convertToWebp($manager, $disk, $path);
-                
+
                 if ($newPath && $newPath !== $path) {
                     $user->profile_photo = $newPath;
                     $user->save();
@@ -96,13 +96,13 @@ class OptimizeImagesToWebp extends Command
             return $path;
         }
 
-        if (!Storage::disk($disk)->exists($path)) {
+        if (! Storage::disk($disk)->exists($path)) {
             return null; // File missing
         }
 
         try {
             $fileContents = Storage::disk($disk)->get($path);
-            
+
             // Handle differences between Intervention Image v3 and v4
             if (method_exists($manager, 'read')) {
                 $image = $manager->read($fileContents);
@@ -115,15 +115,16 @@ class OptimizeImagesToWebp extends Command
 
             $directory = dirname($path);
             $filenameWithoutExt = pathinfo($path, PATHINFO_FILENAME);
-            
+
             // Generate a safe unique name for the new WebP file
-            $newPath = ($directory === '.' ? '' : $directory . '/') . uniqid() . '-' . $filenameWithoutExt . '.webp';
+            $newPath = ($directory === '.' ? '' : $directory.'/').uniqid().'-'.$filenameWithoutExt.'.webp';
 
             Storage::disk($disk)->put($newPath, (string) $encoded);
 
             return $newPath;
         } catch (\Exception $e) {
-            $this->error("\nFailed to convert {$path}: " . $e->getMessage());
+            $this->error("\nFailed to convert {$path}: ".$e->getMessage());
+
             return null;
         }
     }

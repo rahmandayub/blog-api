@@ -5,10 +5,11 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
-use function Laravel\Prompts\password;
-use function Laravel\Prompts\confirm;
 
 class ManageUser extends Command
 {
@@ -45,7 +46,7 @@ class ManageUser extends Command
             'list' => $this->listUsers(),
             'create' => $this->createUser(),
             'edit' => $this->editUser(),
-            'remove'  => $this->removeUser(),
+            'remove' => $this->removeUser(),
             default => $this->error("Invalid action: {$action}"),
         };
     }
@@ -56,7 +57,7 @@ class ManageUser extends Command
 
         $this->table(
             ['ID', 'Name', 'Email', 'Created At'],
-            $users->map(fn($user) => [
+            $users->map(fn ($user) => [
                 $user->id,
                 $user->name,
                 $user->email,
@@ -77,8 +78,8 @@ class ManageUser extends Command
         $email = text(
             label: 'Email',
             required: true,
-            validate: fn(string $value) => match (true) {
-                !filter_var($value, FILTER_VALIDATE_EMAIL) => 'Invalid email format.',
+            validate: fn (string $value) => match (true) {
+                ! filter_var($value, FILTER_VALIDATE_EMAIL) => 'Invalid email format.',
                 User::where('email', $value)->exists() => 'Email already in use.',
                 default => null
             }
@@ -87,7 +88,7 @@ class ManageUser extends Command
         $pwd = password(
             label: 'Password',
             required: true,
-            validate: fn(string $value) => strlen($value) < 8 ? 'Password must be at least 8 characters.' : null
+            validate: fn (string $value) => strlen($value) < 8 ? 'Password must be at least 8 characters.' : null
         );
 
         $user = User::create([
@@ -103,18 +104,19 @@ class ManageUser extends Command
     {
         $id = $this->argument('user_id');
 
-        if (!$id) {
+        if (! $id) {
             $id = text(
                 label: 'Enter the ID of the user to edit',
                 required: true,
-                validate: fn($value) => User::where('id', $value)->exists() ? null : 'User not found.'
+                validate: fn ($value) => User::where('id', $value)->exists() ? null : 'User not found.'
             );
         }
 
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("User not found with ID: {$id}");
+
             return;
         }
 
@@ -128,6 +130,7 @@ class ManageUser extends Command
 
         if ($action === 'cancel') {
             $this->info('Edit cancelled.');
+
             return;
         }
 
@@ -135,7 +138,7 @@ class ManageUser extends Command
             $pwd = password(
                 label: 'New Password',
                 required: true,
-                validate: fn(string $value) => strlen($value) < 8 ? 'Password must be at least 8 characters.' : null
+                validate: fn (string $value) => strlen($value) < 8 ? 'Password must be at least 8 characters.' : null
             );
             $user->password = Hash::make($pwd);
         } elseif ($action === 'email') {
@@ -143,8 +146,8 @@ class ManageUser extends Command
                 label: 'New Email',
                 default: $user->email,
                 required: true,
-                validate: fn(string $value) => match (true) {
-                    !filter_var($value, FILTER_VALIDATE_EMAIL) => 'Invalid email format.',
+                validate: fn (string $value) => match (true) {
+                    ! filter_var($value, FILTER_VALIDATE_EMAIL) => 'Invalid email format.',
                     $value !== $user->email && User::where('email', $value)->exists() => 'Email already in use.',
                     default => null
                 }
@@ -161,25 +164,26 @@ class ManageUser extends Command
         }
 
         $user->save();
-        $this->info("User updated successfully.");
+        $this->info('User updated successfully.');
     }
 
     protected function removeUser()
     {
         $id = $this->argument('user_id');
 
-        if (!$id) {
+        if (! $id) {
             $id = text(
                 label: 'Enter the ID of the user to remove',
                 required: true,
-                validate: fn($value) => User::where('id', $value)->exists() ? null : 'User not found.'
+                validate: fn ($value) => User::where('id', $value)->exists() ? null : 'User not found.'
             );
         }
 
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("User not found with ID: {$id}");
+
             return;
         }
 
@@ -190,9 +194,9 @@ class ManageUser extends Command
 
         if ($confirmed) {
             $user->delete();
-            $this->info("User deleted successfully.");
+            $this->info('User deleted successfully.');
         } else {
-            $this->warn("Deletion cancelled.");
+            $this->warn('Deletion cancelled.');
         }
     }
 }

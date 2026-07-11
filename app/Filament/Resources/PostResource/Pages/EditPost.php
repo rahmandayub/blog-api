@@ -4,9 +4,9 @@ namespace App\Filament\Resources\PostResource\Pages;
 
 use App\Filament\Resources\PostResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
-use Filament\Forms\Components\Select;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Resources\Pages\EditRecord;
 
 class EditPost extends EditRecord
 {
@@ -32,7 +32,7 @@ class EditPost extends EditRecord
                             'draft' => 'Draft',
                             'publish' => 'Publish',
                         ])
-                        ->default(fn($record) => $record->status ?? 'draft')
+                        ->default(fn ($record) => $record->status ?? 'draft')
                         ->required(),
                 ])
                 ->action(function (array $data) {

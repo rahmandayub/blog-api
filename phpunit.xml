@@ -30,5 +30,8 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+                <env name="API_KEY" value="test-api-key-value"/>
+                <env name="BLOG_WEBHOOK_SECRET" value="test-webhook-secret-value"/>
+                <env name="KALITERA_WEBHOOK_URL" value="https://kalitera.id/api/webhook/blog"/>
     </php>
 </phpunit>

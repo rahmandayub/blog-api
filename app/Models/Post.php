@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -10,6 +11,8 @@ use Intervention\Image\ImageManager;
 
 class Post extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['title', 'slug', 'content', 'category_id', 'featured_image', 'user_id', 'status'];
 
     public function category()
