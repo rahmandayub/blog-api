@@ -16,7 +16,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
- // Correct import
+// Correct import
 
 class PostResource extends Resource
 {
@@ -35,7 +35,7 @@ class PostResource extends Resource
                     ->schema([
                         Forms\Components\Section::make('Content')->schema([
                             Forms\Components\TextInput::make('title')
-                                // ... same as before
+                                ->required()
                                 ->live(onBlur: true)
                                 ->afterStateUpdated(
                                     fn ($state, callable $set) => $set(
@@ -44,7 +44,8 @@ class PostResource extends Resource
                                     ),
                                 ),
                             Forms\Components\TextInput::make('slug')
-                                // ... same as before
+                                ->required()
+                                ->unique(ignoreRecord: true)
                                 ->disabled()
                                 ->dehydrated(),
                             Forms\Components\RichEditor::make(
@@ -84,7 +85,8 @@ class PostResource extends Resource
 
                 Forms\Components\Hidden::make('user_id')
                     ->default(fn () => Auth::id())
-                    ->dehydrated(),
+                    ->dehydratedOn('create')
+                    ->visibleOn('create'),
             ])
             ->columns(3);
     }

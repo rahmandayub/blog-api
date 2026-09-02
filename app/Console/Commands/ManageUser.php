@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\password;
@@ -94,7 +93,8 @@ class ManageUser extends Command
         $user = User::create([
             'name' => $name,
             'email' => $email,
-            'password' => Hash::make($pwd),
+            'password' => $pwd,
+            'email_verified_at' => now(),
         ]);
 
         $this->info("User created successfully: {$user->name} (ID: {$user->id})");
@@ -140,7 +140,7 @@ class ManageUser extends Command
                 required: true,
                 validate: fn (string $value) => strlen($value) < 8 ? 'Password must be at least 8 characters.' : null
             );
-            $user->password = Hash::make($pwd);
+            $user->password = $pwd;
         } elseif ($action === 'email') {
             $newEmail = text(
                 label: 'New Email',

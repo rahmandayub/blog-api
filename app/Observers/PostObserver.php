@@ -42,7 +42,7 @@ class PostObserver
             'excerpt' => Str::limit(strip_tags($post->content), 200),
             'featured_image' => $post->featured_image,
             'status' => $post->status,
-            'published_at' => $post->status === 'publish' ? $post->created_at->toIso8601String() : null,
+            'published_at' => $post->published_at?->toIso8601String(),
             'created_at' => $post->created_at->toIso8601String(),
             'updated_at' => $post->updated_at->toIso8601String(),
             'user' => $post->user ? [

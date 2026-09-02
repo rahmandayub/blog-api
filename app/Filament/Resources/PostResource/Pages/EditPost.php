@@ -36,8 +36,9 @@ class EditPost extends EditRecord
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    $this->record->status = $data['status'];
-                    $this->save();
+                    $formData = array_merge($this->getForm('form')->getState(), ['status' => $data['status']]);
+                    $this->getRecord()->update($formData);
+                    $this->redirect($this->getResource()::getUrl('index'));
                 }),
         ];
     }

@@ -38,8 +38,10 @@ class PostApiController extends Controller
             }
         }
 
+        $perPage = min((int) request('per_page', 15), 50);
+
         return PostResource::collection(
-            $query->paginate(request('per_page', 15)),
+            $query->paginate($perPage),
         );
     }
 

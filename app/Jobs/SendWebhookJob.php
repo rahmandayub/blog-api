@@ -29,12 +29,22 @@ class SendWebhookJob implements ShouldQueue
 
     public function handle(): void
     {
+        $url = config('blog.webhook_url');
+        if (! $url) {
+            return;
+        }
+
         Http::withToken(config('blog.webhook_secret'))
             ->timeout(30)
-            ->post(config('blog.webhook_url'), [
+            ->post($url, [
                 'event' => $this->event,
                 'data' => $this->data,
             ])
             ->throw();
+    }
+
+    public function failed(\Throwable $e): void
+    {
+        \Log::error('Webhook failed: '.$e->getMessage(), ['event' => $this->event]);
     }
 }

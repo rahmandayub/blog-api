@@ -25,7 +25,7 @@ class PostResource extends JsonResource
                     : 'uploads/'.ltrim($this->featured_image, '/'))
                 : null,
             'status' => $this->status,
-            'published_at' => $this->status === 'publish' ? $this->created_at : null,
+            'published_at' => $this->published_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'category' => $this->category

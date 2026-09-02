@@ -13,7 +13,9 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'content', 'category_id', 'featured_image', 'user_id', 'status'];
+    protected $fillable = ['title', 'slug', 'content', 'category_id', 'featured_image', 'user_id', 'status', 'published_at'];
+
+    protected $casts = ['published_at' => 'datetime'];
 
     public function category()
     {
@@ -33,6 +35,15 @@ class Post extends Model
     protected static function booted(): void
     {
         static::saving(function (Post $post) {
+            // Manage published_at transition
+            if ($post->isDirty('status')) {
+                if ($post->status === 'publish' && ! $post->published_at) {
+                    $post->published_at = now();
+                } elseif ($post->status === 'draft') {
+                    $post->published_at = null;
+                }
+            }
+
             if ($post->isDirty('featured_image') && $post->featured_image) {
                 $post->convertFeaturedImageToWebp();
             }
@@ -41,13 +52,6 @@ class Post extends Model
         static::deleting(function (Post $post) {
             if ($post->featured_image) {
                 Storage::disk('public')->delete($post->featured_image);
-            }
-        });
-
-        static::updating(function (Post $post) {
-            $originalImage = $post->getOriginal('featured_image');
-            if ($post->isDirty('featured_image') && $originalImage && Storage::disk('public')->exists($originalImage)) {
-                Storage::disk('public')->delete($originalImage);
             }
         });
     }
@@ -67,6 +71,8 @@ class Post extends Model
             return;
         }
 
+        $original = $this->getOriginal('featured_image');
+
         try {
             $manager = new ImageManager(new Driver);
             $fileContents = Storage::disk('public')->get($path);
@@ -79,12 +85,14 @@ class Post extends Model
 
             Storage::disk('public')->put($newPath, (string) $encoded);
 
-            // Delete the original file
+            $this->featured_image = $newPath;
+
             Storage::disk('public')->delete($path);
 
-            $this->featured_image = $newPath;
+            if ($original && $original !== $path && Storage::disk('public')->exists($original)) {
+                Storage::disk('public')->delete($original);
+            }
         } catch (\Exception $e) {
-            // Log the error but don't block the save
             \Log::error('Failed to convert featured image to WebP: '.$e->getMessage());
         }
     }
