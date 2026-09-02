@@ -65,7 +65,6 @@ class ProfilePage extends Page
                                     ->label('Upload Photo')
                                     ->image()
                                     ->imageEditor()
-                                    ->optimize('webp')
                                     ->imageCropAspectRatio('1:1')
                                     ->hint(
                                         'For best results, upload a square photo.',
