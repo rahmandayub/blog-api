@@ -13,7 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 // Correct import
@@ -82,11 +81,6 @@ class PostResource extends Resource
                         ]),
                     ])
                     ->columnSpan(['lg' => 1]),
-
-                Forms\Components\Hidden::make('user_id')
-                    ->default(fn () => Auth::id())
-                    ->dehydratedOn('create')
-                    ->visibleOn('create'),
             ])
             ->columns(3);
     }

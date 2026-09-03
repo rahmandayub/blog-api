@@ -7,6 +7,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Auth;
 
 class CreatePost extends CreateRecord
 {
@@ -14,6 +15,7 @@ class CreatePost extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $data['user_id'] = Auth::id();
         $data['status'] = $data['status'] ?? 'draft';
 
         return $data;
@@ -36,7 +38,7 @@ class CreatePost extends CreateRecord
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    $formData = array_merge($this->getForm('form')->getState(), $data);
+                    $formData = $this->mutateFormDataBeforeCreate(array_merge($this->getForm('form')->getState(), $data));
                     $record = $this->handleRecordCreation($formData);
 
                     Notification::make()
