@@ -32,7 +32,7 @@ class PostObserver
 
     private function dispatchUpdated(Post $post): void
     {
-        $post->load(['category', 'tags', 'user']);
+        $post->load(['category', 'tags', 'user', 'references']);
 
         SendWebhookJob::dispatch('post.updated', [
             'id' => $post->id,
@@ -57,6 +57,13 @@ class PostObserver
                 'name' => $post->category->name,
             ] : null,
             'tags' => $post->tags->map(fn ($tag) => ['id' => $tag->id, 'name' => $tag->name])->toArray(),
+            'references' => $post->references->map(fn ($reference) => [
+                'id' => $reference->id,
+                'title' => $reference->title,
+                'url' => $reference->url,
+                'source' => $reference->source,
+                'sort_order' => $reference->sort_order,
+            ])->toArray(),
         ]);
     }
 }

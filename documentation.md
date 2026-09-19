@@ -43,6 +43,8 @@ GET /api/posts?search=laravel&category_id=2&per_page=10&page=2
       "slug": "example-post",
       "content": "...",
       "featured_image": "...",
+      "status": "publish",
+      "published_at": "...",
       "created_at": "...",
       "updated_at": "...",
       "category": {
@@ -51,6 +53,15 @@ GET /api/posts?search=laravel&category_id=2&per_page=10&page=2
       },
       "tags": [
         { "id": 1, "name": "Laravel" }
+      ],
+      "references": [
+        {
+          "id": 10,
+          "title": "Laravel Documentation",
+          "url": "https://laravel.com/docs",
+          "source": "Laravel",
+          "sort_order": 0
+        }
       ],
       "user": {
         "id": 5,
@@ -63,6 +74,8 @@ GET /api/posts?search=laravel&category_id=2&per_page=10&page=2
   "meta": { ... }
 }
 ```
+
+> `references` selalu array (kosong `[]` jika artikel tidak punya referensi). Sudah terurut `sort_order` menaik lalu `id` menaik. `source` bisa `null`.
 
 ---
 
@@ -88,6 +101,8 @@ GET /api/posts/example-post
         "slug": "example-post",
         "content": "...",
         "featured_image": "...",
+        "status": "publish",
+        "published_at": "...",
         "created_at": "...",
         "updated_at": "...",
         "category": {
@@ -95,6 +110,22 @@ GET /api/posts/example-post
             "name": "Tech"
         },
         "tags": [{ "id": 1, "name": "Laravel" }],
+        "references": [
+            {
+                "id": 10,
+                "title": "Laravel Documentation",
+                "url": "https://laravel.com/docs",
+                "source": "Laravel",
+                "sort_order": 0
+            },
+            {
+                "id": 11,
+                "title": "PHP Manual",
+                "url": "https://www.php.net/manual",
+                "source": null,
+                "sort_order": 1
+            }
+        ],
         "user": {
             "id": 5,
             "name": "John Doe"
@@ -102,6 +133,16 @@ GET /api/posts/example-post
     }
 }
 ```
+
+#### Field `references`
+
+| Field | Type | Wajib | Keterangan |
+|-------|------|-------|------------|
+| `id` | integer | ya | ID referensi |
+| `title` | string | ya | Judul referensi |
+| `url` | string | ya | URL lengkap `https://...`, buka di tab baru |
+| `source` | string \| null | tidak | Nama penerbit/situs, bisa `null` — sembunyikan jika `null` |
+| `sort_order` | integer | ya | Urutan tampil, kecil → tampil duluan. Jangan sort ulang di frontend |
 
 ---
 

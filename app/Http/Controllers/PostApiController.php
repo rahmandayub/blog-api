@@ -10,7 +10,7 @@ class PostApiController extends Controller
     // GET /api/posts
     public function index()
     {
-        $query = Post::with(['category', 'tags', 'user'])->where(
+        $query = Post::with(['category', 'tags', 'user', 'references'])->where(
             'status',
             'publish',
         );
@@ -48,7 +48,7 @@ class PostApiController extends Controller
     // GET /api/posts/{slug}
     public function show($slug)
     {
-        $post = Post::with(['category', 'tags', 'user'])
+        $post = Post::with(['category', 'tags', 'user', 'references'])
             ->where('slug', $slug)
             ->where('status', 'publish')
             ->firstOrFail();

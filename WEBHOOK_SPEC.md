@@ -38,6 +38,8 @@ BLOG_WEBHOOK_SECRET=your-shared-secret-here
     "content": "<p>Full HTML content</p>",
     "excerpt": "Short excerpt...",
     "featured_image": "uploads/image.webp",
+    "status": "publish",
+    "published_at": "2026-07-11T09:00:00Z",
     "created_at": "2026-07-11T09:00:00Z",
     "updated_at": "2026-07-11T10:00:00Z",
     "user": {
@@ -55,10 +57,16 @@ BLOG_WEBHOOK_SECRET=your-shared-secret-here
     "tags": [
       {"id": 1, "name": "akuntansi-dasar"},
       {"id": 2, "name": "laporan-keuangan"}
+    ],
+    "references": [
+      {"id": 10, "title": "PSAK 1 Penyajian Laporan Keuangan", "url": "https://example.com/psak-1", "source": "IAI", "sort_order": 0},
+      {"id": 11, "title": "Laravel Docs", "url": "https://laravel.com/docs", "source": null, "sort_order": 1}
     ]
   }
 }
 ```
+
+> `references` selalu array (`[]` jika kosong), sudah terurut `sort_order` lalu `id`. `source` dapat `null`. Lakukan full-replace daftar referensi per `post.updated` berdasarkan `id` referensi.
 
 ### Post Deleted
 

@@ -40,6 +40,15 @@ class PostResource extends JsonResource
                     'name' => $tag->name,
                 ];
             }),
+            'references' => $this->references->map(function ($reference) {
+                return [
+                    'id' => $reference->id,
+                    'title' => $reference->title,
+                    'url' => $reference->url,
+                    'source' => $reference->source,
+                    'sort_order' => $reference->sort_order,
+                ];
+            }),
             'user' => $this->user
                 ? [
                     'id' => $this->user->id,

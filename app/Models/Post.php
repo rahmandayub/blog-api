@@ -32,6 +32,11 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function references()
+    {
+        return $this->hasMany(PostReference::class)->orderBy('sort_order')->orderBy('id');
+    }
+
     protected static function booted(): void
     {
         static::saving(function (Post $post) {

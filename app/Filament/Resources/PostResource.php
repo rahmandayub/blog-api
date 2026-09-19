@@ -51,6 +51,36 @@ class PostResource extends Resource
                                 'content',
                             )->columnSpanFull(),
                         ]),
+                        Forms\Components\Section::make('Referensi')
+                            ->description('Daftar sumber rujukan artikel. Satu artikel bisa memiliki lebih dari satu referensi.')
+                            ->schema([
+                                Forms\Components\Repeater::make('references')
+                                    ->relationship()
+                                    ->orderColumn('sort_order')
+                                    ->schema([
+                                        Forms\Components\TextInput::make('title')
+                                            ->label('Judul')
+                                            ->required()
+                                            ->maxLength(255)
+                                            ->placeholder('Judul artikel sumber'),
+                                        Forms\Components\TextInput::make('url')
+                                            ->label('URL')
+                                            ->required()
+                                            ->url()
+                                            ->maxLength(2048)
+                                            ->placeholder('https://contoh.com/sumber'),
+                                        Forms\Components\TextInput::make('source')
+                                            ->label('Sumber / Penerbit')
+                                            ->maxLength(255)
+                                            ->placeholder('cth: Kompas.com, Jurnal Ilmiah'),
+                                    ])
+                                    ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Referensi baru')
+                                    ->addActionLabel('Tambah referensi')
+                                    ->collapsible()
+                                    ->collapsed()
+                                    ->defaultItems(0)
+                                    ->columnSpanFull(),
+                            ]),
                     ])
                     ->columnSpan(['lg' => 2]),
 
@@ -125,6 +155,12 @@ class PostResource extends Resource
                     ->label('Tags')
                     ->badge()
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('references_count')
+                    ->label('Referensi')
+                    ->counts('references')
+                    ->badge()
+                    ->sortable(),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Published On')
