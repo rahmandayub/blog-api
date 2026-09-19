@@ -31,6 +31,8 @@ class SendWebhookJob implements ShouldQueue
     {
         $url = config('blog.webhook_url');
         if (! $url) {
+            \Log::warning('Webhook skipped: KALITERA_WEBHOOK_URL is not configured.', ['event' => $this->event]);
+
             return;
         }
 
