@@ -59,10 +59,10 @@ class PostResource extends Resource
                                     ->orderColumn('sort_order')
                                     ->schema([
                                         Forms\Components\TextInput::make('title')
-                                            ->label('Judul')
-                                            ->required()
+                                            ->label('Judul (opsional)')
+                                            ->nullable()
                                             ->maxLength(255)
-                                            ->placeholder('Judul artikel sumber'),
+                                            ->placeholder('Judul artikel sumber (boleh dikosongkan)'),
                                         Forms\Components\TextInput::make('url')
                                             ->label('URL')
                                             ->required()
@@ -74,7 +74,7 @@ class PostResource extends Resource
                                             ->maxLength(255)
                                             ->placeholder('cth: Kompas.com, Jurnal Ilmiah'),
                                     ])
-                                    ->itemLabel(fn (array $state): ?string => $state['title'] ?? 'Referensi baru')
+                                    ->itemLabel(fn (array $state): ?string => ! empty($state['title']) ? $state['title'] : (! empty($state['url']) ? $state['url'] : 'Referensi baru'))
                                     ->addActionLabel('Tambah referensi')
                                     ->collapsible()
                                     ->collapsed()
