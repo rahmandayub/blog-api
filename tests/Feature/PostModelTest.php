@@ -101,6 +101,14 @@ test('post belongs to category and user and has tags', function () {
         ->and($post->tags)->toBeInstanceOf(Collection::class);
 });
 
+test('post content larger than 64KB persists', function () {
+    $content = str_repeat('a', 70000);
+
+    $post = Post::factory()->create(['content' => $content]);
+
+    expect($post->refresh()->content)->toBe($content);
+});
+
 test('updating featured_image deletes old image via model event', function () {
     // This test verifies the WebP conversion path cleans up old file when possible
     // We use Storage fake and a real image conversion would require GD; we test the branch where file missing is handled
